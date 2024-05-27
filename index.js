@@ -43,7 +43,26 @@ async function run() {
     const reviewCollection = db.collection("review");
     const orderCollection = db.collection("orders");
     const packageCollection = db.collection("packages");
+    const ticketCollection = db.collection("tickets");
 
+    // air ticket manage
+    app.post("/tickets", async (req, res) => {
+      const body = req.body;
+      const newContact = await ticketCollection.insertOne(body);
+      res.send(newContact);
+    });
+
+    app.get("/tickets", async (req, res) => {
+      const result = await ticketCollection.find({}).toArray();
+      res.send(result);
+    });
+
+    app.delete("/tickets/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await ticketCollection.deleteOne(query);
+      res.send(result);
+    });
     // package manage
     app.post("/packages", async (req, res) => {
       const body = req.body;
@@ -60,7 +79,7 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await packageCollection.deleteOne(query);
-      res.send(result); 
+      res.send(result);
     });
 
 
